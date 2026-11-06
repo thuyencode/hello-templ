@@ -1,7 +1,14 @@
+ENV_FILE = .env
+
+ifneq (,$(wildcard $(ENV_FILE)))
+    include $(ENV_FILE)
+    export
+endif
+
 templ-gen:
 	templ generate
 dev:
-	templ generate --watch --cmd="go run ." --proxy="http://localhost:8080"
+	templ generate --watch --cmd="go run ." --proxy="http://localhost:$$PORT"
 run: templ-gen
 	go run .
 fmt:

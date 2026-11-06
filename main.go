@@ -5,15 +5,21 @@ import (
 	"net/http"
 
 	"github.com/a-h/templ"
+	"github.com/joho/godotenv"
 	"github.com/thuyencode/hello-templ/components"
 )
 
 func main() {
-	mux := http.NewServeMux()
-	server := http.Server{Handler: mux, Addr: ":8080"}
-	component := components.Hello("World")
+	env, err := godotenv.Read()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	mux.Handle("/", templ.Handler(component))
+	port := env["PORT"]
+	mux := http.NewServeMux()
+	server := http.Server{Handler: mux, Addr: ":" + port}
+
+	mux.Handle("/", templ.Handler(components.Hello("World")))
 
 	log.Fatal(server.ListenAndServe())
 }
